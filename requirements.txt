@@ -1,12 +1,3 @@
 mediapipe==0.8.9.1
 opencv-python
-SpeechRecognition==3.8.1
 jupyter
-gTTS==2.2.3
-pydub==0.25.1
-pyttsx3==2.90
-moviepy==1.0.3
-pyfoal
-deepspeech==0.9.3
-ffmpeg==1.4
-autosub
