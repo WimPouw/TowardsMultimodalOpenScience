@@ -14272,7 +14272,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#load in required packages</span>
@@ -14282,6 +14282,7 @@ a.anchor-link {
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#basic operations</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> <span class="c1">#data wrangling</span>
 <span class="kn">import</span> <span class="nn">csv</span> <span class="c1">#csv saving</span>
+<span class="kn">import</span> <span class="nn">os</span> <span class="c1">#some basic functions for inspecting folder structure etc.</span>
 
 <span class="c1">#list all videos in input_videofolder</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span>
@@ -14293,7 +14294,11 @@ a.anchor-link {
 <span class="n">outtputf_ts</span> <span class="o">=</span> <span class="s2">"./Output_TimeSeries/"</span>
 
 <span class="c1">#check videos to be processed</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"The following video will be processed for masking: "</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"The following folder is set as the output folder where all the pose time series are stored"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">outtputf_ts</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> The following folder is set as the output folder for saving the masked videos "</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">outputf_mask</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> The following video(s) will be processed for masking: "</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">vfiles</span><span class="p">)</span>
 </pre></div>
 
@@ -14314,8 +14319,14 @@ a.anchor-link {
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>The following video will be processed for masking: 
-['sample.mp4', 'ted_kid.mp4']
+<pre>The following folder is set as the output folder where all the pose time series are stored
+D:\TowardsMultimodalOpenScience\Output_TimeSeries
+
+ The following folder is set as the output folder for saving the masked videos 
+D:\TowardsMultimodalOpenScience\Output_MaskedVideos
+
+ The following video(s) will be processed for masking: 
+['1413451-11105600-11163240_1a1_1.mp4', 'sample.mp4', 'ted_kid.mp4']
 </pre>
 </div>
 </div>
@@ -14324,10 +14335,10 @@ a.anchor-link {
 
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#initialize modules and functions</span>
@@ -14358,6 +14369,14 @@ a.anchor-link {
                <span class="s1">'RIGHT_PINKY_FINGER_PIP'</span><span class="p">,</span> <span class="s1">'RIGHT_PINKY_FINGER_DIP'</span><span class="p">,</span> <span class="s1">'RIGHT_PINKY_FINGER_TIP'</span><span class="p">]</span>
 <span class="n">facemarks</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">478</span><span class="p">)]</span> <span class="c1">#there are 478 points for the face mesh (see google holistic face mesh info for landmarks)</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Note that we have the following number of pose keypoints for markers body"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">markersbody</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> Note that we have the following number of pose keypoints for markers hands"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">markershands</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> Note that we have the following number of pose keypoints for markers face"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">facemarks</span> <span class="p">))</span>
 
 <span class="c1">#set up the column names and objects for the time series data (add time as the first variable)</span>
 <span class="n">markerxyzbody</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'time'</span><span class="p">]</span>
@@ -14404,6 +14423,34 @@ a.anchor-link {
 </div>
 </div>
 
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Note that we have the following number of pose keypoints for markers body
+33
+
+ Note that we have the following number of pose keypoints for markers hands
+42
+
+ Note that we have the following number of pose keypoints for markers face
+478
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
@@ -14413,11 +14460,14 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#make a loop</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#We will now loop over all the videos that are present in the video file</span>
 <span class="k">for</span> <span class="n">vidf</span> <span class="ow">in</span> <span class="n">vfiles</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"We will now process video:"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">vidf</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"This is video number"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">vfiles</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">vidf</span><span class="p">))</span><span class="o">+</span> <span class="s2">"of"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vfiles</span><span class="p">))</span> <span class="o">+</span> <span class="s2">"videos in total"</span><span class="p">)</span>
     <span class="c1">#capture the video, and check video settings</span>
     <span class="n">videoname</span> <span class="o">=</span> <span class="n">vidf</span>
     <span class="n">videoloc</span> <span class="o">=</span> <span class="s2">"./Input_Videos/"</span> <span class="o">+</span> <span class="n">videoname</span>
@@ -14541,27 +14591,22 @@ a.anchor-link {
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Done with processing all folders; go look in your output folders!
+<pre>We will now process video:
+1413451-11105600-11163240_1a1_1.mp4
+This is video number0of3videos in total
+We will now process video:
+sample.mp4
+This is video number1of3videos in total
+We will now process video:
+ted_kid.mp4
+This is video number2of3videos in total
+Done with processing all folders; go look in your output folders!
 </pre>
 </div>
 </div>
 
 </div>
 
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
