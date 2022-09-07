@@ -10,6 +10,7 @@ Check out the notebook for direct inspection of the code: https://wimpouw.github
 file Masked-Piper_Notebook.ipynb = is the notebook that you can run with jupyter notebook  <br />
 file Masked-PiperPY.py = the python file that you can run directly in your console  <br />
 file Masked-PiperSTART.bat = if you just want to run the tool and you have python installed, you can run this batch file and it will process all the videos in your input_Videos folder  <br />
+file requirements.txt = if you want install all the dependencies in one go, you can run this files via pip install in your terminal like so: pip install -r requirements.txt <br />
 folder Output_TimeSeries = The stored kinematic timeseries for body, hand, and face  <br />
 folder Input_Videos = You can drop your videos here to process them  <br />
 folder Output_MaskedVideos = This is where your masked videos are stored  <br />
