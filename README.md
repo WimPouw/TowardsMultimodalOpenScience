@@ -27,4 +27,4 @@ folder docs = location of the notebook html  <br />
 folder images = location of images  <br />
 
 # Preliminary citation (status: Accepted)
-Owoyele, B., Trujillo, J., De Melo, G., Pouw, W. (2022). Masked-Piper: Masking personal identities in visual recordings while preserving multimodal information. SoftwareX. https://github.com/WimPouw/TowardsMultimodalOpenScience
+Owoyele, B., Trujillo, J., De Melo, G., Pouw, W. (2022). Masked-Piper: Masking personal identities in visual recordings while preserving multimodal information. **SoftwareX**. https://github.com/WimPouw/TowardsMultimodalOpenScience
