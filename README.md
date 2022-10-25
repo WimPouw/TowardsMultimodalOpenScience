@@ -1,4 +1,4 @@
-# Masked Piper: : Masking personal identities in visual recordings while preserving multimodal information  <br />
+# Masked Piper: Masking personal identities in visual recordings while preserving multimodal information  <br />
 This python notebook runs you through the procedure of taking videos as inputs with a single person in the video, and outputting the 1) a masked video with facial, hand, and arm kinematics ovelayen, and 2) outputs the kinematic timeseries. This tool is a simple but effective modification of the the Holistic Tracking by Google's Mediapipe so that we can use it as a CPU-based light weigth tool to mask your video data while maintaining background information, and also preserving information about body kinematics.  <br />
 
 ![Masked-Piper](https://github.com/WimPouw/TowardsMultimodalOpenScience/blob/main/Images/Capture.JPG?raw=true)
@@ -27,4 +27,4 @@ folder docs = location of the notebook html  <br />
 folder images = location of images  <br />
 
 # Preliminary citation (status: Accepted)
-Owoyele, B., Trujillo, J., De Melo, G., Pouw, W. (2022). Masked-Piper: Masking personal identities in visual recordings while preserving multimodal information. **SoftwareX**. https://github.com/WimPouw/TowardsMultimodalOpenScience
+Owoyele, B., Trujillo, J., De Melo, G., Pouw, W. (2022). Masked-Piper: Masking personal identities in visual recordings while preserving multimodal information. *SoftwareX*. https://github.com/WimPouw/TowardsMultimodalOpenScience
