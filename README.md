@@ -26,5 +26,5 @@ folder Example_combined = This is an after-edited video showing the pre-mask and
 folder docs = location of the notebook html  <br />
 folder images = location of images  <br />
 
-# Preliminary citation (status: Accepted)
-Owoyele, B., Trujillo, J., De Melo, G., Pouw, W. (2022). Masked-Piper: Masking personal identities in visual recordings while preserving multimodal information. *SoftwareX*. https://github.com/WimPouw/TowardsMultimodalOpenScience
+# Citation (status: Published)
+Owoyele, B., Trujillo, J., De Melo, G., Pouw, W. (2022). Masked-Piper: Masking personal identities in visual recordings while preserving multimodal information. *SoftwareX*. doi: [10.1016/j.softx.2022.101236](https://www.sciencedirect.com/science/article/pii/S2352711022001546)
