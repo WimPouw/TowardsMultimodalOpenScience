@@ -1,4 +1,8 @@
+# Pinned for reproducibility. mediapipe 0.8.9.1 (Dec 2021) is the anchor;
+# other versions pinned to contemporaneous releases. Validate on first install
+# for your target Python version (tested originally on Python 3.8-3.9).
 mediapipe==0.8.9.1
-opencv-python
-jupyter
-pandas
+opencv-python==4.5.5.64
+numpy==1.21.6
+pandas==1.3.5
+jupyter==1.0.0
