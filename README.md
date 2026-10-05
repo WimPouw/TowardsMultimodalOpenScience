@@ -11,10 +11,11 @@ Check out the notebook for direct inspection of the code: https://wimpouw.github
 - Run
     ```bash
     git clone https://github.com/WimPouw/TowardsMultimodalOpenScience.git
+    git checkout updated_mediapipe_python
     ```
 - navigate to the right folder
     ```bash
-    cd path/to/TowardsMultimodalOpenScience
+    cd TowardsMultimodalOpenScience
     ```
 - Run
     ```bash
@@ -24,7 +25,7 @@ Check out the notebook for direct inspection of the code: https://wimpouw.github
     ```
 - You can now drop your videos into the Input_Videos folder (and delete the example videos), and and start processing the videos by running
     ```bash
-    python .\Masked-PiperPY.py
+    python Masked-PiperPY.py
     ```
 - Your masked videos will show up in (Output_MaskedVideos) and your kinematic time series will be in (Output_TimeSeries)
 
