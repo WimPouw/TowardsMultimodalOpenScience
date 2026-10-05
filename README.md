@@ -7,17 +7,30 @@ This python notebook runs you through the procedure of taking videos as inputs w
 Check out the notebook for direct inspection of the code: https://wimpouw.github.io/TowardsMultimodalOpenScience/Index
 
 # Quick run of the tool without coding
-- Install python (e.g., install anaconda) and pip (e.g., 'conda install pip' in your conda command prompt).  <br />
-- Then download the repository  <br />
-- Then you first make sure you have all the dependencies installed. First navigate via your conda/command prompt to the local folder where you have stored the repository (e.g., 'cd C:\TowardsMultimodalOpenScience'). Then you install the requirements with 'pip install -r requirements.txt', which will install the dependencies you need.
-- OPTIONAL: Then you can test whether the tool works by clicking on Masked-PiperSTART.bat in your folder (this will run the tool on the videos already present in the input folder)
-- You can now drop your videos into the Input_Videos folder (and delete the example videos), and and start processing the videos by clicking on Masked-PiperSTART.bat
+- install anaconda/ miniconda
+- Run
+    ```bash
+    git clone https://github.com/WimPouw/TowardsMultimodalOpenScience.git
+    ```
+- navigate to the right folder
+    ```bash
+    cd path/to/TowardsMultimodalOpenScience
+    ```
+- Run
+    ```bash
+    conda create -n masked-piper python=3.10
+    conda activate masked-piper
+    pip install -r requirements.txt
+    ```
+- You can now drop your videos into the Input_Videos folder (and delete the example videos), and and start processing the videos by running
+    ```bash
+    python .\Masked-PiperPY.py
+    ```
 - Your masked videos will show up in (Output_MaskedVideos) and your kinematic time series will be in (Output_TimeSeries)
 
 # File structure
 file Masked-Piper_Notebook.ipynb = is the notebook that you can run with jupyter notebook  <br />
 file Masked-PiperPY.py = the python file that you can run directly in your console  <br />
-file Masked-PiperSTART.bat = if you just want to run the tool and you have python installed, you can run this batch file and it will process all the videos in your input_Videos folder  <br />
 file requirements.txt = if you want install all the dependencies in one go, you can run this files via pip install in your terminal like so: pip install -r requirements.txt <br />
 folder Output_TimeSeries = The stored kinematic timeseries for body, hand, and face  <br />
 folder Input_Videos = You can drop your videos here to process them  <br />
