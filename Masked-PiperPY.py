@@ -35,10 +35,21 @@ print(vfiles)
 #initialize modules and functions
 
 #load in mediapipe modules
-mp_holistic = mp.solutions.holistic
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
+
+model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "holistic_landmarker.task")
+if not os.path.isfile(model_path):
+    raise FileNotFoundError(
+        model_path + " not found. "
+        "Download https://storage.googleapis.com/mediapipe-assets/holistic_landmarker.task "
+        "and place it beside Masked-PiperPY.py."
+    )
 # Import drawing_utils and drawing_styles.
-mp_drawing = mp.solutions.drawing_utils
-mp_drawing_styles = mp.solutions.drawing_styles
+mp_drawing = vision.drawing_utils
+hand_connections = vision.HandLandmarksConnections.HAND_CONNECTIONS
+face_connections = vision.FaceLandmarksConnections.FACE_LANDMARKS_TESSELATION
+pose_connections = vision.PoseLandmarksConnections.POSE_LANDMARKS
 
 ##################FUNCTIONS AND OTHER VARIABLES
 #landmarks 33x that are used by Mediapipe (Blazepose)
@@ -98,15 +109,16 @@ def makegoginto_str(gogobj):
     return(gogobj[:-1]) #ignore last element as this has nothing
 
 #make the stringifyd position traces into clean numerical values
-def listpostions(newsamplemarks):
-    newsamplemarks = makegoginto_str(newsamplemarks)
+def listpostions(newsamplemarks, landmark_count, include_visibility=False):
+    """Extract Tasks landmarks in CSV order, padding missing detections."""
+    fields = ('x', 'y', 'z', 'visibility') if include_visibility else ('x', 'y', 'z')
+    landmarks = newsamplemarks or []
     tracking_p = []
-    for value in newsamplemarks:
-        if num_there(value):
-            stripped = value.split(':', 1)[1]
-            stripped = stripped.strip() #remove spaces in the string if present
-            tracking_p.append(stripped) #add to this list  
-    return(tracking_p)
+    for index in range(landmark_count):
+        for field in fields:
+            value = getattr(landmarks[index], field, None) if index < len(landmarks) else None
+            tracking_p.append(float('nan') if value is None else value)
+    return tracking_p
 
 #We will now loop over all the videos that are present in the video file
 for vidf in vfiles:
@@ -131,58 +143,49 @@ for vidf in vfiles:
     tsbody = [markerxyzbody]   #these will be your time series objects, which start with collumn names initialized above
     tshands = [markerxyzhands] #these will be your time series objects, which start with collumn names initialized above
     tsface = [markerxyzface]   #these will be your time series objects, which start with collumn names initialized above
-    with mp_holistic.Holistic(
-            static_image_mode=True, enable_segmentation=True, refine_face_landmarks=True) as holistic:
+    # IMAGE mode preserves the previous static_image_mode=True behavior.
+    options = vision.HolisticLandmarkerOptions(
+        base_options=python.BaseOptions(model_asset_path=model_path),
+        running_mode=vision.RunningMode.IMAGE,
+        output_segmentation_mask=True,
+    )
+    with vision.HolisticLandmarker.create_from_options(options) as holistic:
         while (True):
             ret, image = capture.read() #read frame
             if ret == True: #if there is a frame
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) #make sure the image is in RGB format
-                results = holistic.process(image) #apply Mediapipe holistic processing
-                # Draw pose segmentation
-                h, w, c = image.shape
-                original_image = np.concatenate([image, np.full((h, w, 1), 255, dtype=np.uint8)], axis=-1)
-                mask_img = np.zeros_like(image, dtype=np.uint8) #set up basic mask image
-                if  np.all(results.segmentation_mask) != None: #check if there is a pose found
-                    mask_img[:, :] = (255,255,255) #set up basic mask image
-                    segm_2class = 0.2 + 0.8 * results.segmentation_mask #set up a segmentation of the results of mediapipe
-                    segm_2class = np.repeat(segm_2class[..., np.newaxis], 3, axis=2) #set up a segmentation of the results of mediapipe
-                    annotated_image = mask_img * segm_2class * (1 - segm_2class) #take the basic mask image and make a sillhouette mask
-                    # append Alpha channel to sillhouetted mask so that we can overlay it to the original image
-                    mask = np.concatenate([annotated_image, np.full((h, w, 1), 255, dtype=np.uint8)], axis=-1)
-                    # Zero background where we want to overlay
-                    original_image[mask==0]=0 #for the original image we are going to set everything at zero for places where the mask has to go
-                    original_image = cv2.cvtColor(original_image, cv2.COLOR_RGB2BGR)
-                    #now lets draw on the original_image the left and right hand landmarks, the facemesh and the body poses
-                        #left hand
-                    mp_drawing.draw_landmarks(original_image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
-                        #right hand
-                    mp_drawing.draw_landmarks(original_image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
-                        #face
-                    mp_drawing.draw_landmarks(
-                            original_image,
-                            results.face_landmarks,
-                            mp_holistic.FACEMESH_TESSELATION,
-                            landmark_drawing_spec=None,
-                            connection_drawing_spec=mp_drawing_styles
-                            .get_default_face_mesh_tesselation_style())
-                        #body
-                    mp_drawing.draw_landmarks(
-                            original_image,
-                            results.pose_landmarks,
-                            mp_holistic.POSE_CONNECTIONS,
-                            landmark_drawing_spec=mp_drawing_styles.
-                            get_default_pose_landmarks_style())
-                    #######################now save everything to a time series
-                        #make a variable list with x, y, z, info where data is appended to
-                    samplebody = listpostions(results.pose_landmarks)
-                    samplehands = listpostions([results.left_hand_landmarks, results.right_hand_landmarks])
-                    sampleface = listpostions(results.face_landmarks)
-                    samplebody.insert(0, time)
-                    samplehands.insert(0, time)
-                    sampleface.insert(0, time)
-                    tsbody.append(samplebody)   #append to the timeseries object
-                    tshands.append(samplehands) #append to the timeseries object
-                    tsface.append(sampleface)   #append to the timeseries object
+                mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(image))
+                results = holistic.detect(mp_image) #apply Mediapipe holistic processing
+                # Keep the writer and drawing input as a three-channel BGR frame.
+                original_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                if results.segmentation_mask is not None:
+                    segmentation_mask = results.segmentation_mask.numpy_view()
+                    # Tasks can return (height, width, 1); select pixels across all BGR channels.
+                    if segmentation_mask.ndim == 3 and segmentation_mask.shape[2] == 1:
+                        segmentation_mask = segmentation_mask[..., 0]
+                    segm_2class = 0.2 + 0.8 * segmentation_mask
+                    original_image[segm_2class * (1 - segm_2class) == 0] = 0
+
+                mp_drawing.draw_landmarks(
+                    original_image, results.left_hand_landmarks, hand_connections)
+                mp_drawing.draw_landmarks(
+                    original_image, results.right_hand_landmarks, hand_connections)
+                mp_drawing.draw_landmarks(
+                    original_image, results.face_landmarks, face_connections,
+                    landmark_drawing_spec=None,
+                    connection_drawing_spec=mp_drawing.DrawingSpec(
+                        color=(128, 128, 128), thickness=1, circle_radius=1))
+                mp_drawing.draw_landmarks(
+                    original_image, results.pose_landmarks, pose_connections)
+
+                # Save one fixed-width row per frame, including missing detections.
+                samplebody = listpostions(results.pose_landmarks, 33, include_visibility=True)
+                samplehands = (listpostions(results.left_hand_landmarks, 21)
+                               + listpostions(results.right_hand_landmarks, 21))
+                sampleface = listpostions(results.face_landmarks, 478)
+                tsbody.append([time] + samplebody)
+                tshands.append([time] + samplehands)
+                tsface.append([time] + sampleface)
                 #show the video as we process (you can comment this out, if you want to run this process in the background)
                 cv2.imshow("resizedimage", original_image)
                 out.write(original_image) #save the frame to the new masked video
